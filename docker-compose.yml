@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+
+  peer0:
+    image: node:8-alpine
+    command: npm run start
+    working_dir: /srv/app
+    volumes:
+      - .:/srv/app
+      - /srv2/test
+    ports:
+      - "3001:3001"
+      - "5001:5001"
+    networks: 
+      - blockchain_ntw
+
+  peer1:
+    image: node:8-alpine
+    command: npm run start
+    working_dir: /srv/app
+    volumes:
+      - .:/srv/app
+      - /srv2/test
+    ports:
+      - "3002:3002"
+      - "5002:5002"
+    environment:
+      - HTTP_PORT=3002
+      - P2P_PORT=5002
+      - PEERS=ws://peer0:5001
+    networks: 
+      - blockchain_ntw
+    depends_on: 
+      - peer0
+
+networks:
+  blockchain_ntw:
