@@ -6,9 +6,16 @@
     $ npm run test
 ```
 
-###
-```sh
-HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm run dev
+### Running the application with 3 or 2 peers
 
-HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev
+```sh
+$ HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm run dev
+
+$ HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev
+```
+
+### Running the app using docker-compose
+
+```sh
+$ docker-compose -f docker-compose.yml up -d
 ```
