@@ -3,7 +3,7 @@
 ### Running all test cases
 
 ```sh
-    $ npm run test
+$ npm run test
 ```
 
 ### Running the application with 3 or 2 peers

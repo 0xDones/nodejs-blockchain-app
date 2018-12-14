@@ -3,63 +3,63 @@
 const ChainUtil = require('../chain-util');
 
 class Transaction {
-    constructor() {
-        this.id = ChainUtil.id();
-        this.input = null;
-        this.outputs = [];
+  constructor() {
+    this.id = ChainUtil.id();
+    this.input = null;
+    this.outputs = [];
+  }
+
+  update(senderWallet, recipient, amount) {
+    const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
+
+    if (amount > senderOutput.amount) {
+      console.log(`Amount: ${amount} exceed the balance.`);
+      return;
     }
 
-    update(senderWallet, recipient, amount) {
-        const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
+    senderOutput.amount = senderOutput.amount - amount;
 
-        if (amount > senderOutput.amount) {
-            console.log(`Amount: ${amount} exceed the balance.`);
-            return;
-        }
+    this.outputs.push({ amount, address: recipient });
 
-        senderOutput.amount = senderOutput.amount - amount;
+    Transaction.signTransaction(this, senderWallet);
 
-        this.outputs.push({ amount, address: recipient });
+    return this;
+  }
 
-        Transaction.signTransaction(this, senderWallet);
+  static newTransaction(senderWallet, recipient, amount) {
+    const transaction = new this();
 
-        return this;
+    if (amount > senderWallet.balance) {
+      console.log(`Amount: ${amount} exceeds balance.`);
+      return;
     }
 
-    static newTransaction(senderWallet, recipient, amount) {
-        const transaction = new this();
+    transaction.outputs.push(...[
+      { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
+      { amount, address: recipient }
+    ])
 
-        if (amount > senderWallet.balance) {
-            console.log(`Amount: ${amount} exceeds balance.`);
-            return;
-        }
+    Transaction.signTransaction(transaction, senderWallet)
 
-        transaction.outputs.push(...[
-            { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
-            { amount, address: recipient }
-        ])
+    return transaction;
+  }
 
-        Transaction.signTransaction(transaction, senderWallet)
-
-        return transaction;
+  static signTransaction(transaction, senderWallet) {
+    transaction.input = {
+      timestamp: Date.now(),
+      amount: senderWallet.balance,
+      address: senderWallet.publicKey,
+      signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))
     }
+  }
 
-    static signTransaction(transaction, senderWallet) {
-        transaction.input = {
-            timestamp: Date.now(),
-            amount: senderWallet.balance,
-            address: senderWallet.publicKey,
-            signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))
-        }
-    }
-
-    static verifyTransaction(transaction) {
-        return ChainUtil.verifySignature(
-            transaction.input.address,
-            transaction.input.signature,
-            ChainUtil.hash(transaction.outputs)
-        )
-    }
+  static verifyTransaction(transaction) {
+    return ChainUtil.verifySignature(
+      transaction.input.address,
+      transaction.input.signature,
+      ChainUtil.hash(transaction.outputs)
+    )
+  }
 }
 
 module.exports = Transaction;
