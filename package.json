@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test": "jest --watchAll --verbose false",
     "dev-test": "node dev-test",
     "start": "node ./app",
     "dev": "nodemon ./app"

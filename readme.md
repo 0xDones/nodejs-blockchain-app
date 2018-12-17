@@ -15,18 +15,18 @@ npm run test
 ### Running the application
 
 ```sh
-# Single Peer
+# Starting first peer
 npm run dev
 
-# Two Peers
+# Starting second peer
 HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev
 
-# Three Peers
+# Starting third peer
 HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm run dev
 ```
 
 ### Running the app using docker-compose
 
 ```sh
-$ docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.yml up -d
 ```
