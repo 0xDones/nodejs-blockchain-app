@@ -1,4 +1,5 @@
 # Node.js Blockchain Application
+This is an Application I developed following [this course](https://www.udemy.com/course/build-blockchain/learn/) on [udemy.](https://www.udemy.com) I dockerized the application to make it easy to play with.
 
 ### Getting Started
 
